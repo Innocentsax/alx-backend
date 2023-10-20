@@ -6,5 +6,5 @@
 ## Projects
 - [Pagination](./0x00-pagination)
 
-Elevate your Backend skills in Python and Node.js. Join us for a coding journey like no other. 🚀 #ALX-Backend Specialisation
+Elevate your Backend skills in Python and Node.js. Join us for a coding journey like no other. 🚀 #ALX-Backend Specialisation.
 
