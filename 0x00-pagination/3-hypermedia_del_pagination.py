@@ -17,7 +17,7 @@ class Server:
         self.__dataset = None
         self.__indexed_dataset = None
 
-    def dataset(self) -> List[List]:
+    def dataset(self) -> List[List]:  # sourcery skip: identity-comprehension
         """Cached dataset
         """
         if self.__dataset is None:
@@ -39,31 +39,34 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = None,
-                        page_size: int = 10) -> Dict:
-        """ return all data"""
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        """ Deletion-resilient hypermedia pagination """
 
-        if index is None:
-            index = 0
+        idx_dataset = self.indexed_dataset()
 
-        # validate the index
-        assert isinstance(index, int)
-        assert 0 <= index < len(self.indexed_dataset())
-        assert isinstance(page_size, int) and page_size > 0
+        assert isinstance(index, int) and index < (len(idx_dataset) - 1)
 
-        data = []  # collect all indexed data
-        next_index = index + page_size
+        i, mv, data = 0, index, []
+        while (i < page_size and index < len(idx_dataset)):
+            value = idx_dataset.get(mv, None)
+            if value:
+                data.append(value)
+                i += 1
+            mv += 1
 
-        for value in range(index, next_index):
-            if self.indexed_dataset().get(value):
-                data.append(self.indexed_dataset()[value])
-            else:
-                value += 1
-                next_index += 1
+        next_index = None
+        while (mv < len(idx_dataset)):
+            value = idx_dataset.get(mv, None)
+            if value:
+                next_index = mv
+                break
+            mv += 1
 
-        return {
+        hyper = {
             'index': index,
-            'data': data,
+            'next_index': next_index,
             'page_size': page_size,
-            'next_index': next_index
+            'data': data
         }
+
+        return hyper
