@@ -5,4 +5,4 @@ Resources
 - [Redis quick start](https://redis.io/docs/getting-started/tutorial/)
 - [Redis client interface](https://redis.io/docs/manual/cli/)
 - [Redis client for Node JS](https://github.com/redis/node-redis)
-- Kue deprecated but still use in the industry
+- [Kue](https://github.com/Automattic/kue)
